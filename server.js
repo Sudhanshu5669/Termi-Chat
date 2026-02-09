@@ -6,21 +6,18 @@ const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer);
 
-const rooms = new Map(); // roomId -> user count
+const rooms = new Map();
 
 io.on('connection', (socket) => {
     console.log('Connected:', socket.id);
 
-    // Send list of rooms
     socket.on('get_rooms', () => {
         socket.emit('rooms_list', Array.from(rooms.keys()));
     });
 
-    // Join / create room
     socket.on('join_room', (roomId) => {
         roomId = roomId.trim();
 
-        // Leave old room if exists
         if (socket.currentRoom) {
             const oldRoom = socket.currentRoom;
             socket.leave(oldRoom);
@@ -32,7 +29,6 @@ io.on('connection', (socket) => {
             }
         }
 
-        // Join new room
         socket.join(roomId);
         socket.currentRoom = roomId;
 
@@ -42,7 +38,7 @@ io.on('connection', (socket) => {
         socket.emit('joined_room', roomId);
     });
 
-    // Message inside room (send to everyone INCLUDING sender)
+
     socket.on('room_message', (msg) => {
         if (!socket.currentRoom) return;
 
@@ -52,7 +48,6 @@ io.on('connection', (socket) => {
         });
     });
 
-    // Disconnect cleanup
     socket.on('disconnect', () => {
         const roomId = socket.currentRoom;
         if (!roomId) return;

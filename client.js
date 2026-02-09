@@ -31,7 +31,6 @@ socket.on("rooms_list", (rooms) => {
 socket.on("joined_room", (room) => {
     currentRoom = room;
     console.log(`\nJoined room ${room}`);
-    rl.setPrompt(`[Room ${room}] > `);
     rl.prompt();
 });
 
