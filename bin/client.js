@@ -1,7 +1,10 @@
+#!/usr/bin/env node
+
 const { io } = require("socket.io-client");
 const readline = require("readline");
+const SERVER_URL = process.env.CHAT_SERVER_URL || "https://386c2435-ca60-4d15-9824-1cf32a80def6-00-lzgyi1j6rgdp.pike.replit.dev:3000/";
 
-const socket = io("http://localhost:3000");
+const socket = io(SERVER_URL);
 
 const rl = readline.createInterface({
     input: process.stdin,
